@@ -28,4 +28,17 @@ public class JobApplicationService {
     public void deleteJob(Long id) {
         repository.deleteById(id);
     }
+    public JobApplication updateJob(Long id, JobApplication updatedJob) {
+        JobApplication existingJob = repository.findById(id).orElse(null);
+
+        if (existingJob != null) {
+            existingJob.setCompanyName(updatedJob.getCompanyName());
+            existingJob.setRole(updatedJob.getRole());
+            existingJob.setStatus(updatedJob.getStatus());
+
+            return repository.save(existingJob);
+        }
+
+        return null;
+    }
 }

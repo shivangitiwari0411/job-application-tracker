@@ -34,5 +34,12 @@ public class JobApplicationController {
         service.deleteJob(id);
         return "Job deleted successfully";
     }
+    @PutMapping("/{id}")
+    public JobApplication updateJob(
+            @PathVariable Long id,
+            @RequestBody JobApplication updatedJob) {
+
+        return service.updateJob(id, updatedJob);
+    }
 
 }

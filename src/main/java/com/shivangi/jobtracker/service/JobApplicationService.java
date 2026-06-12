@@ -22,4 +22,7 @@ public class JobApplicationService {
     public List<JobApplication> getAllJobs() {
         return repository.findAll();
     }
+    public JobApplication getJobById(Long id) {
+        return repository.findById(id).orElse(null);
+    }
 }

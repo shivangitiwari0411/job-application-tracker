@@ -25,4 +25,9 @@ public class JobApplicationController {
     public List<JobApplication> getAllJobs() {
         return service.getAllJobs();
     }
+    @GetMapping("/{id}")
+    public JobApplication getJobById(@PathVariable Long id) {
+        return service.getJobById(id);
+    }
+
 }

@@ -25,4 +25,7 @@ public class JobApplicationService {
     public JobApplication getJobById(Long id) {
         return repository.findById(id).orElse(null);
     }
+    public void deleteJob(Long id) {
+        repository.deleteById(id);
+    }
 }

@@ -29,5 +29,10 @@ public class JobApplicationController {
     public JobApplication getJobById(@PathVariable Long id) {
         return service.getJobById(id);
     }
+    @DeleteMapping("/{id}")
+    public String deleteJob(@PathVariable Long id) {
+        service.deleteJob(id);
+        return "Job deleted successfully";
+    }
 
 }

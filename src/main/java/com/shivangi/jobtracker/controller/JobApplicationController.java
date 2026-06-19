@@ -41,5 +41,17 @@ public class JobApplicationController {
 
         return service.updateJob(id, updatedJob);
     }
+    @GetMapping("/company/{companyName}")
+    public List<JobApplication> getJobsByCompany(
+            @PathVariable String companyName) {
+
+        return service.getJobsByCompany(companyName);
+    }
+    @GetMapping("/status/{status}")
+    public List<JobApplication> getJobsByStatus(
+            @PathVariable String status) {
+
+        return service.getJobsByStatus(status);
+    }
 
 }

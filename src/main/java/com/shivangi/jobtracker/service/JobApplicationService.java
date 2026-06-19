@@ -41,4 +41,11 @@ public class JobApplicationService {
 
         return null;
     }
+    public List<JobApplication> getJobsByCompany(String companyName) {
+        return repository.findByCompanyName(companyName);
+    }
+
+    public List<JobApplication> getJobsByStatus(String status) {
+        return repository.findByStatus(status);
+    }
 }

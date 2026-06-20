@@ -8,4 +8,5 @@ public interface JobApplicationRepository
     List<JobApplication> findByCompanyName(String companyName);
 
     List<JobApplication> findByStatus(String status);
+
 }

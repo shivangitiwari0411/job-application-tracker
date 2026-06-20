@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/jobs")
@@ -55,6 +57,13 @@ public class JobApplicationController {
     public JobApplication createJob(
             @Valid @RequestBody JobApplication jobApplication) {
         return service.saveJob(jobApplication);
+    }
+    @GetMapping("/paged")
+    public Page<JobApplication> getJobsPaginated(
+            @RequestParam int page,
+            @RequestParam int size) {
+
+        return service.getJobsPaginated(page, size);
     }
 
 }

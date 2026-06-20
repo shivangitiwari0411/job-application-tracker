@@ -4,6 +4,8 @@ import com.shivangi.jobtracker.entity.JobApplication;
 import com.shivangi.jobtracker.repository.JobApplicationRepository;
 import org.springframework.stereotype.Service;
 import com.shivangi.jobtracker.exception.JobNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -49,5 +51,8 @@ public class JobApplicationService {
 
     public List<JobApplication> getJobsByStatus(String status) {
         return repository.findByStatus(status);
+    }
+    public Page<JobApplication> getJobsPaginated(int page, int size) {
+        return repository.findAll(PageRequest.of(page, size));
     }
 }

@@ -5,6 +5,7 @@ import com.shivangi.jobtracker.service.JobApplicationService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/jobs")
@@ -16,10 +17,7 @@ public class JobApplicationController {
         this.service = service;
     }
 
-    @PostMapping
-    public JobApplication addJob(@RequestBody JobApplication job) {
-        return service.saveJob(job);
-    }
+
 
     @GetMapping
     public List<JobApplication> getAllJobs() {
@@ -37,7 +35,7 @@ public class JobApplicationController {
     @PutMapping("/{id}")
     public JobApplication updateJob(
             @PathVariable Long id,
-            @RequestBody JobApplication updatedJob) {
+            @Valid @RequestBody JobApplication updatedJob) {
 
         return service.updateJob(id, updatedJob);
     }
@@ -52,6 +50,11 @@ public class JobApplicationController {
             @PathVariable String status) {
 
         return service.getJobsByStatus(status);
+    }
+    @PostMapping
+    public JobApplication createJob(
+            @Valid @RequestBody JobApplication jobApplication) {
+        return service.saveJob(jobApplication);
     }
 
 }

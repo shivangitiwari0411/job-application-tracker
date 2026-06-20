@@ -1,6 +1,7 @@
 package com.shivangi.jobtracker.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "job_applications")
@@ -10,10 +11,13 @@ public class JobApplication {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Company name is required")
     private String companyName;
 
+    @NotBlank(message = "Role is required")
     private String role;
 
+    @NotBlank(message = "Status is required")
     private String status;
 
     // Getters and Setters

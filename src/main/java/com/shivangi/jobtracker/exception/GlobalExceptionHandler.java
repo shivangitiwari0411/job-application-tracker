@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import com.shivangi.jobtracker.exception.JobNotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,5 +28,15 @@ public class GlobalExceptionHandler {
                                 error.getDefaultMessage()));
 
         return errors;
+    }
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(JobNotFoundException.class)
+    public Map<String, String> handleJobNotFoundException(
+            JobNotFoundException ex) {
+
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+
+        return error;
     }
 }

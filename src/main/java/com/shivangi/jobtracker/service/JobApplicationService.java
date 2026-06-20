@@ -3,6 +3,7 @@ package com.shivangi.jobtracker.service;
 import com.shivangi.jobtracker.entity.JobApplication;
 import com.shivangi.jobtracker.repository.JobApplicationRepository;
 import org.springframework.stereotype.Service;
+import com.shivangi.jobtracker.exception.JobNotFoundException;
 
 import java.util.List;
 
@@ -23,7 +24,8 @@ public class JobApplicationService {
         return repository.findAll();
     }
     public JobApplication getJobById(Long id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id)
+                .orElseThrow(() -> new JobNotFoundException(id));
     }
     public void deleteJob(Long id) {
         repository.deleteById(id);

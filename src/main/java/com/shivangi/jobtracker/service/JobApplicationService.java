@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import com.shivangi.jobtracker.exception.JobNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-
+import org.springframework.data.domain.Sort;
 import java.util.List;
 
 @Service
@@ -54,5 +54,8 @@ public class JobApplicationService {
     }
     public Page<JobApplication> getJobsPaginated(int page, int size) {
         return repository.findAll(PageRequest.of(page, size));
+    }
+    public List<JobApplication> getJobsSorted(String field) {
+        return repository.findAll(Sort.by(field));
     }
 }

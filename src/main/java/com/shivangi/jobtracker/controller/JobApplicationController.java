@@ -65,5 +65,11 @@ public class JobApplicationController {
 
         return service.getJobsPaginated(page, size);
     }
+    @GetMapping("/sorted")
+    public List<JobApplication> getJobsSorted(
+            @RequestParam String field) {
+
+        return service.getJobsSorted(field);
+    }
 
 }

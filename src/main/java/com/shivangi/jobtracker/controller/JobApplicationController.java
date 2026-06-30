@@ -1,5 +1,6 @@
 package com.shivangi.jobtracker.controller;
 
+import com.shivangi.jobtracker.dto.JobApplicationDTO;
 import com.shivangi.jobtracker.entity.JobApplication;
 import com.shivangi.jobtracker.service.JobApplicationService;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class JobApplicationController {
         return service.getAllJobs();
     }
     @GetMapping("/{id}")
-    public JobApplication getJobById(@PathVariable Long id) {
+    public JobApplicationDTO getJobById(@PathVariable Long id) {
         return service.getJobById(id);
     }
     @DeleteMapping("/{id}")
@@ -53,10 +54,10 @@ public class JobApplicationController {
 
         return service.getJobsByStatus(status);
     }
+
     @PostMapping
-    public JobApplication createJob(
-            @Valid @RequestBody JobApplication jobApplication) {
-        return service.saveJob(jobApplication);
+    public JobApplicationDTO saveJob(@Valid @RequestBody JobApplicationDTO dto) {
+        return service.saveJob(dto);
     }
     @GetMapping("/paged")
     public Page<JobApplication> getJobsPaginated(

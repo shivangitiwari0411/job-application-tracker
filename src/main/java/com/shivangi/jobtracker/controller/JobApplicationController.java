@@ -11,9 +11,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
+
 @RequestMapping("/jobs")
 public class JobApplicationController {
-
+    
     private final JobApplicationService service;
 
     public JobApplicationController(JobApplicationService service) {

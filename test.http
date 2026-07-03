@@ -1,0 +1,20 @@
+### Home
+GET http://localhost:8080/
+
+###
+
+### Get all jobs
+GET http://localhost:8080/jobs
+
+###
+
+### Add a new job
+POST http://localhost:8080/jobs
+Content-Type: application/json
+
+{
+  "companyName": "Google",
+  "jobRole": "Software Engineer",
+  "status": "Applied",
+  "applicationDate": "2026-07-02"
+}

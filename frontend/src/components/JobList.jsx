@@ -6,7 +6,7 @@ function JobList() {
     const [jobs, setJobs] = useState([]);
 
     useEffect(() => {
-        API.get("")
+        API.get("/jobs")
             .then(response => {
                 setJobs(response.data);
             })

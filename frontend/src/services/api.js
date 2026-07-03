@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-    baseURL: "http://localhost:8080/jobs"
+    baseURL: "https://jobtracker-backend-kjmc.onrender.com"
 });
 
 export default API;

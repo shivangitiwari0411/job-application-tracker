@@ -6,13 +6,27 @@ function JobList() {
     const [jobs, setJobs] = useState([]);
 
     useEffect(() => {
+
+        console.log("Calling API...");
+
         API.get("/jobs")
             .then(response => {
-                setJobs(response.data);
+
+                console.log("Full Response:", response);
+                console.log("Response Data:", response.data);
+
+                if (Array.isArray(response.data)) {
+                    setJobs(response.data);
+                } else {
+                    console.error("Expected an array but received:", response.data);
+                    setJobs([]);
+                }
+
             })
             .catch(error => {
-                console.log(error);
+                console.error("API Error:", error);
             });
+
     }, []);
 
     return (

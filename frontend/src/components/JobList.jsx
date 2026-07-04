@@ -11,6 +11,8 @@ function JobList() {
         status: "Applied"
     });
     const [editingId, setEditingId] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [statusFilter, setStatusFilter] = useState("All");
 
     const fetchJobs = () => {
         API.get("/jobs")
@@ -98,10 +100,105 @@ function JobList() {
 
             }
     };
+    const filteredJobs = jobs.filter((job) => {
+
+        const matchesSearch =
+            job.companyName.toLowerCase().includes(searchTerm.toLowerCase());
+
+        const matchesStatus =
+            statusFilter === "All" || job.status === statusFilter;
+
+        return matchesSearch && matchesStatus;
+
+    });
 
     return (
         <div className="container mt-4">
+            <div className="row mb-4">
+            <div className="col-md">
+                    <div className="card text-center shadow">
+                        <div className="card-body">
+                            <h5>Total</h5>
+                            <h2>{jobs.length}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md">
+                    <div className="card text-center shadow border-success">
+                        <div className="card-body">
+                            <h5>Applied</h5>
+                            <h2>
+                                {jobs.filter(j => j.status === "Applied").length}
+                            </h2>
+                        </div>
+                    </div>
+                </div>
 
+                <div className="col-md">
+                    <div className="card text-center shadow border-warning">
+                        <div className="card-body">
+                            <h5>Interview</h5>
+                            <h2>
+                                {jobs.filter(j => j.status === "Interview").length}
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="col-md">
+                    <div className="card text-center shadow border-primary">
+                        <div className="card-body">
+                            <h5>Offer</h5>
+                            <h2>
+                                {jobs.filter(j => j.status === "Offer").length}
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="col-md">
+                    <div className="card text-center shadow border-danger">
+                        <div className="card-body">
+                            <h5>Rejected</h5>
+                            <h2>
+                                {jobs.filter(j => j.status === "Rejected").length}
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div className="row mb-4">
+
+                    <div className="col-md-6">
+
+                        <input
+                            className="form-control"
+                            placeholder="Search Company..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+
+                    </div>
+
+                    <div className="col-md-6">
+
+                        <select
+                            className="form-select"
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                        >
+
+                            <option>All</option>
+                            <option>Applied</option>
+                            <option>Interview</option>
+                            <option>Offer</option>
+                            <option>Rejected</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
             <form onSubmit={handleSubmit} className="mb-4">
 
                 <div className="row">
@@ -169,7 +266,7 @@ function JobList() {
 
                 <tbody>
 
-                    {jobs.map(job => (
+                    {filteredJobs(job => (
 
                         <tr key={job.id}>
 
@@ -177,7 +274,21 @@ function JobList() {
 
                             <td>{job.role}</td>
 
-                            <td>{job.status}</td>
+                            <td>
+                                <span
+                                    className={
+                                        job.status === "Applied"
+                                            ? "badge bg-primary"
+                                            : job.status === "Interview"
+                                            ? "badge bg-warning text-dark"
+                                            : job.status === "Offer"
+                                            ? "badge bg-success"
+                                            : "badge bg-danger"
+                                    }
+                                >
+                                    {job.status}
+                                </span>
+                            </td>
 
                             <td>
 

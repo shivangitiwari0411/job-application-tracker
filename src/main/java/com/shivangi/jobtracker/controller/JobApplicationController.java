@@ -11,7 +11,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(
+        origins = {
+                "http://localhost:5173",
+                "https://job-application-tracker-sooty-phi.vercel.app"
+        }
+)
+
 @RequestMapping("/jobs")
 public class JobApplicationController {
     

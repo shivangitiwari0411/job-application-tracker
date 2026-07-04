@@ -19,7 +19,7 @@ public class CorsConfig {
                 registry.addMapping("/**")
                         .allowedOrigins(
                                 "http://localhost:5173",
-                                "https://job-application-tracker-git-main-shivangi-tiwaris-projects.vercel.app"
+                                "https://job-application-tracker-sooty-phi.vercel.app/"
                         )
                         .allowedMethods("*")
                         .allowedHeaders("*");

@@ -266,7 +266,7 @@ function JobList() {
 
                 <tbody>
 
-                    {filteredJobs(job => (
+                    {filteredJobs.map(job => (
 
                         <tr key={job.id}>
 

@@ -4,6 +4,8 @@ import { toast } from "react-toastify";
 import StatusChart from "../charts/StatusChart";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 function JobList() {
 
@@ -182,6 +184,42 @@ function JobList() {
         );
 
         saveAs(file, "JobApplications.xlsx");
+
+    };
+    const exportToPDF = () => {
+
+        const doc = new jsPDF();
+
+        doc.setFontSize(18);
+
+        doc.text("Job Application Report", 14, 20);
+
+        autoTable(doc, {
+
+            startY: 30,
+
+            head: [[
+                "Company",
+                "Role",
+                "Status",
+                "Date Applied"
+            ]],
+
+            body: allJobs.map(job => [
+
+                job.companyName,
+
+                job.role,
+
+                job.status,
+
+                job.dateApplied
+
+            ])
+
+        });
+
+        doc.save("JobApplications.pdf");
 
     };
     const today = new Date();
@@ -405,6 +443,13 @@ function JobList() {
                                 Export Excel
 
                             </button>
+                            <button
+                                        className="btn btn-danger"
+                                        onClick={exportToPDF}
+                                    >
+                                        <i className="bi bi-file-earmark-pdf-fill me-2"></i>
+                                        Export PDF
+                                    </button>
 
                         </div>
 

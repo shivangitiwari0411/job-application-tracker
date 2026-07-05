@@ -118,7 +118,10 @@ function JobList() {
             <div className="col-md">
                     <div className="card text-center shadow">
                         <div className="card-body">
-                            <h5>Total</h5>
+                            <h5>
+                                <i className="bi bi-list-check me-2"></i>
+                                Total
+                            </h5>
                             <h2>{jobs.length}</h2>
                         </div>
                     </div>
@@ -126,7 +129,10 @@ function JobList() {
                 <div className="col-md">
                     <div className="card text-center shadow border-success">
                         <div className="card-body">
-                            <h5>Applied</h5>
+                            <h5>
+                                <i className="bi bi-send-check me-2"></i>
+                                Applied
+                            </h5>
                             <h2>
                                 {jobs.filter(j => j.status === "Applied").length}
                             </h2>
@@ -137,7 +143,10 @@ function JobList() {
                 <div className="col-md">
                     <div className="card text-center shadow border-warning">
                         <div className="card-body">
-                            <h5>Interview</h5>
+                            <h5>
+                                <i className="bi bi-people-fill me-2"></i>
+                                Interview
+                            </h5>
                             <h2>
                                 {jobs.filter(j => j.status === "Interview").length}
                             </h2>
@@ -148,7 +157,10 @@ function JobList() {
                 <div className="col-md">
                     <div className="card text-center shadow border-primary">
                         <div className="card-body">
-                            <h5>Offer</h5>
+                            <h5>
+                                <i className="bi bi-award-fill me-2"></i>
+                                Offer
+                            </h5>
                             <h2>
                                 {jobs.filter(j => j.status === "Offer").length}
                             </h2>
@@ -159,7 +171,10 @@ function JobList() {
                 <div className="col-md">
                     <div className="card text-center shadow border-danger">
                         <div className="card-body">
-                            <h5>Rejected</h5>
+                            <h5>
+                                <i className="bi bi-x-circle-fill me-2"></i>
+                                Rejected
+                            </h5>
                             <h2>
                                 {jobs.filter(j => j.status === "Rejected").length}
                             </h2>
@@ -199,7 +214,18 @@ function JobList() {
                     </div>
 
                 </div>
-            <form onSubmit={handleSubmit} className="mb-4">
+
+                <div className="card shadow mb-4">
+
+                    <div className="card-body">
+
+                        <h4 className="mb-3">
+
+                            {editingId ? "Update Job" : "Add New Job"}
+
+                        </h4>
+
+                        <form onSubmit={handleSubmit} className="mb-0">
 
                 <div className="row">
 
@@ -241,11 +267,12 @@ function JobList() {
                         </select>
                     </div>
 
-                    <div className="col-md-2">
-                        <button className="btn btn-primary w-100">
-
+                    <div className="col-md-2 d-grid">
+                        <button
+                            type="submit"
+                            className="btn btn-success"
+                        >
                             {editingId ? "Update Job" : "Add Job"}
-
                         </button>
                     </div>
 
@@ -253,7 +280,11 @@ function JobList() {
 
             </form>
 
-            <table className="table table-striped table-bordered">
+                </div>
+
+            </div>
+
+            <table className="table table-hover align-middle shadow">
 
                 <thead className="table-dark">
                     <tr>
@@ -293,14 +324,14 @@ function JobList() {
                             <td>
 
                                  <button
-                                        className="btn btn-warning btn-sm me-2"
+                                        className="btn btn-outline-warning"
                                         onClick={() => editJob(job)}
                                     >
                                         Edit
                                     </button>
 
                                     <button
-                                        className="btn btn-danger btn-sm"
+                                        className="btn btn-outline-danger"
                                         onClick={() => deleteJob(job.id)}
                                     >
                                         Delete

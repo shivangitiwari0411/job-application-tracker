@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.time.LocalDate;
 
 @Service
 public class JobApplicationService {
@@ -54,6 +55,7 @@ public class JobApplicationService {
             existingJob.setCompanyName(updatedJob.getCompanyName());
             existingJob.setRole(updatedJob.getRole());
             existingJob.setStatus(updatedJob.getStatus());
+            existingJob.setDateApplied(updatedJob.getDateApplied());
 
             return repository.save(existingJob);
         }
@@ -81,6 +83,7 @@ public class JobApplicationService {
         dto.setCompanyName(job.getCompanyName());
         dto.setRole(job.getRole());
         dto.setStatus(job.getStatus());
+        dto.setDateApplied(job.getDateApplied());
 
         return dto;
     }
@@ -92,6 +95,11 @@ public class JobApplicationService {
         job.setCompanyName(dto.getCompanyName());
         job.setRole(dto.getRole());
         job.setStatus(dto.getStatus());
+        if (dto.getDateApplied() == null) {
+            job.setDateApplied(LocalDate.now());
+        } else {
+            job.setDateApplied(dto.getDateApplied());
+        }
 
         return job;
     }

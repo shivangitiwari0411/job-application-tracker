@@ -2,7 +2,7 @@ package com.shivangi.jobtracker.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-
+import java.time.LocalDate;
 @Entity
 @Table(name = "job_applications")
 public class JobApplication {
@@ -19,6 +19,7 @@ public class JobApplication {
 
     @NotBlank(message = "Status is required")
     private String status;
+    private LocalDate dateApplied;
 
     // Getters and Setters
 
@@ -52,5 +53,12 @@ public class JobApplication {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+    public LocalDate getDateApplied() {
+        return dateApplied;
+    }
+
+    public void setDateApplied(LocalDate dateApplied) {
+        this.dateApplied = dateApplied;
     }
 }

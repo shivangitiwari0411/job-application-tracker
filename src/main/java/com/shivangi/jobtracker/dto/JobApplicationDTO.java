@@ -1,4 +1,5 @@
 package com.shivangi.jobtracker.dto;
+import java.time.LocalDate;
 public class JobApplicationDTO {
 
         private Long id;
@@ -8,6 +9,7 @@ public class JobApplicationDTO {
         private String role;
 
         private String status;
+        private LocalDate dateApplied;
 
         public JobApplicationDTO() {
         }
@@ -43,5 +45,12 @@ public class JobApplicationDTO {
         public void setStatus(String status) {
             this.status = status;
         }
+    public LocalDate getDateApplied() {
+        return dateApplied;
+    }
+
+    public void setDateApplied(LocalDate dateApplied) {
+        this.dateApplied = dateApplied;
+    }
     }
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
+import { toast } from "react-toastify";
 
 function JobList() {
 
@@ -37,12 +38,14 @@ function JobList() {
 
             await API.delete(`/jobs/${id}`);
 
+            toast.success("Job Deleted Successfully!");
+
             fetchJobs();
 
         } catch (error) {
 
             console.error(error);
-            alert("Unable to delete job");
+            toast.error("Unable to delete job");
 
         }
 
@@ -93,10 +96,16 @@ function JobList() {
 
                 fetchJobs();
 
+                toast.success(
+                    editingId
+                        ? "Job Updated Successfully!"
+                        : "Job Added Successfully!"
+                );
+
             } catch (error) {
 
                 console.error(error);
-                alert("Operation Failed");
+                toast.error("Operation Failed");
 
             }
     };

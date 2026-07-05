@@ -6,6 +6,7 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import Swal from "sweetalert2";
 
 function JobList() {
 
@@ -75,12 +76,27 @@ function JobList() {
 
     const deleteJob = async (id) => {
 
-        const confirmDelete = window.confirm(
-            "Are you sure you want to delete this job?"
-        );
+        const result = await Swal.fire({
 
-        if (!confirmDelete) return;
+            title: "Delete Job?",
 
+            text: "This action cannot be undone.",
+
+            icon: "warning",
+
+            showCancelButton: true,
+
+            confirmButtonColor: "#d33",
+
+            cancelButtonColor: "#3085d6",
+
+            confirmButtonText: "Yes, Delete",
+
+            cancelButtonText: "Cancel"
+
+        });
+
+        if (!result.isConfirmed) return;
         try {
 
             await API.delete(`/jobs/${id}`);

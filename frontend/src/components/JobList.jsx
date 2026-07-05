@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import API from "../services/api";
 import { toast } from "react-toastify";
 import StatusChart from "../charts/StatusChart";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 function JobList() {
 
@@ -153,6 +155,34 @@ function JobList() {
                 toast.error("Operation Failed");
 
             }
+    };
+    const exportToExcel = () => {
+
+        const worksheet = XLSX.utils.json_to_sheet(allJobs);
+
+        const workbook = XLSX.utils.book_new();
+
+        XLSX.utils.book_append_sheet(
+            workbook,
+            worksheet,
+            "Jobs"
+        );
+
+        const excelBuffer = XLSX.write(workbook, {
+            bookType: "xlsx",
+            type: "array"
+        });
+
+        const file = new Blob(
+            [excelBuffer],
+            {
+                type:
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8"
+            }
+        );
+
+        saveAs(file, "JobApplications.xlsx");
+
     };
     const today = new Date();
 
@@ -309,7 +339,7 @@ function JobList() {
                                 <h2>{successRate}%</h2>
 
                             </div>
-                
+
                         </div>
 
                     </div>
@@ -319,7 +349,7 @@ function JobList() {
                 <StatusChart jobs={allJobs} />
                 <div className="row mb-4">
 
-                    <div className="col-md-4">
+                    <div className="col-md-3">
 
                         <input
                             className="form-control"
@@ -330,7 +360,7 @@ function JobList() {
 
                     </div>
 
-                    <div className="col-md-4">
+                    <div className="col-md-3">
 
                         <select
                             className="form-select"
@@ -348,7 +378,7 @@ function JobList() {
 
                         </div>
 
-                        <div className="col-md-4">
+                        <div className="col-md-3">
 
                             <select
                                 className="form-select"
@@ -362,6 +392,19 @@ function JobList() {
                                 <option value="status">Status</option>
 
                             </select>
+
+                        </div>
+                        <div className="col-md-3 d-grid">
+
+                            <button
+                                className="btn btn-success"
+                                onClick={exportToExcel}
+                            >
+                                <i className="bi bi-file-earmark-excel-fill me-2"></i>
+
+                                Export Excel
+
+                            </button>
 
                         </div>
 

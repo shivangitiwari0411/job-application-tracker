@@ -154,6 +154,31 @@ function JobList() {
 
             }
     };
+    const today = new Date();
+
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+
+    const thisMonthCount = allJobs.filter(job => {
+
+        if (!job.dateApplied) return false;
+
+        const d = new Date(job.dateApplied);
+
+        return (
+            d.getMonth() === currentMonth &&
+            d.getFullYear() === currentYear
+        );
+
+    }).length;
+
+    const successRate =
+        allJobs.length === 0
+            ? 0
+            : Math.round(
+                (allJobs.filter(j => j.status === "Offer").length /
+                    allJobs.length) * 100
+            );
     const filteredJobs = [...jobs]
         .filter((job) => {
 
@@ -249,6 +274,48 @@ function JobList() {
                     </div>
                 </div>
                 </div>
+                <div className="row mb-4">
+
+                    <div className="col-md-6">
+
+                        <div className="card shadow border-info">
+
+                            <div className="card-body text-center">
+
+                                <h5>
+                                    <i className="bi bi-calendar-check me-2"></i>
+                                    Applications This Month
+                                </h5>
+
+                                <h2>{thisMonthCount}</h2>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div className="col-md-6">
+
+                        <div className="card shadow border-success">
+
+                            <div className="card-body text-center">
+
+                                <h5>
+                                    <i className="bi bi-graph-up-arrow me-2"></i>
+                                    Success Rate
+                                </h5>
+
+                                <h2>{successRate}%</h2>
+
+                            </div>
+                
+                        </div>
+
+                    </div>
+
+                </div>
+
                 <StatusChart jobs={allJobs} />
                 <div className="row mb-4">
 

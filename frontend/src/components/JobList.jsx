@@ -16,7 +16,8 @@ function JobList() {
     const [newJob, setNewJob] = useState({
         companyName: "",
         role: "",
-        status: "Applied"
+        status: "Applied",
+        dateApplied: new Date().toISOString().split("T")[0]
     });
     const [editingId, setEditingId] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
@@ -100,7 +101,8 @@ function JobList() {
 
             companyName: job.companyName,
             role: job.role,
-            status: job.status
+            status: job.status,
+            dateApplied: job.dateApplied
 
         });
 
@@ -131,7 +133,8 @@ function JobList() {
                 setNewJob({
                     companyName: "",
                     role: "",
-                    status: "Applied"
+                    status: "Applied",
+                    dateApplied: new Date().toISOString().split("T")[0]
                 });
 
                 setEditingId(null);
@@ -311,7 +314,7 @@ function JobList() {
 
                 <div className="row">
 
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <input
                             type="text"
                             className="form-control"
@@ -323,7 +326,7 @@ function JobList() {
                         />
                     </div>
 
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <input
                             type="text"
                             className="form-control"
@@ -347,6 +350,17 @@ function JobList() {
                             <option>Rejected</option>
                             <option>Offer</option>
                         </select>
+                    </div>
+                    <div className="col-md-2">
+
+                        <input
+                            type="date"
+                            className="form-control"
+                            name="dateApplied"
+                            value={newJob.dateApplied}
+                            onChange={handleChange}
+                        />
+
                     </div>
 
                     <div className="col-md-2 d-grid">
@@ -373,6 +387,7 @@ function JobList() {
                         <th>Company</th>
                         <th>Role</th>
                         <th>Status</th>
+                        <th>Date Applied</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -401,6 +416,9 @@ function JobList() {
                                 >
                                     {job.status}
                                 </span>
+                            </td>
+                            <td>
+                                {job.dateApplied}
                             </td>
 
                             <td>

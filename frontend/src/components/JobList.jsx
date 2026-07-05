@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import { toast } from "react-toastify";
+import StatusChart from "../charts/StatusChart";
 
 function JobList() {
 
@@ -191,6 +192,7 @@ function JobList() {
                     </div>
                 </div>
                 </div>
+                <StatusChart jobs={jobs} />
                 <div className="row mb-4">
 
                     <div className="col-md-6">

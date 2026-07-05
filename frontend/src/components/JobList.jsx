@@ -6,6 +6,12 @@ import StatusChart from "../charts/StatusChart";
 function JobList() {
 
     const [jobs, setJobs] = useState([]);
+    const [allJobs, setAllJobs] = useState([]);
+
+    const [page, setPage] = useState(0);
+    const [size] = useState(5);
+    const [totalPages, setTotalPages] = useState(0);
+
 
     const [newJob, setNewJob] = useState({
         companyName: "",
@@ -15,18 +21,53 @@ function JobList() {
     const [editingId, setEditingId] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("All");
+    const [sortField, setSortField] = useState("");
 
     const fetchJobs = () => {
-        API.get("/jobs")
+
+        API.get(`/jobs/paged?page=${page}&size=${size}`)
             .then(response => {
-                setJobs(response.data);
-            })
-            .catch(error => console.error(error));
+
+                setJobs(response.data.content);
+
+                setTotalPages(response.data.totalPages);
+
+            });
+            API.get("/jobs")
+                .then(response => {
+                    setAllJobs(response.data);
+                });
+
     };
 
     useEffect(() => {
         fetchJobs();
-    }, []);
+    }, [page]);
+    const sortJobs = (field) => {
+
+        setSortField(field);
+
+        if (field === "") {
+
+            fetchJobs();
+            return;
+
+        }
+
+        API.get(`/jobs/sorted?field=${field}`)
+            .then(response => {
+
+                setJobs(response.data);
+
+            })
+            .catch(error => {
+
+                console.error(error);
+
+            });
+
+    };
+
     const deleteJob = async (id) => {
 
         const confirmDelete = window.confirm(
@@ -110,17 +151,30 @@ function JobList() {
 
             }
     };
-    const filteredJobs = jobs.filter((job) => {
+    const filteredJobs = [...jobs]
+        .filter((job) => {
 
-        const matchesSearch =
-            job.companyName.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesSearch =
+                job.companyName
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase());
 
-        const matchesStatus =
-            statusFilter === "All" || job.status === statusFilter;
+            const matchesStatus =
+                statusFilter === "All" ||
+                job.status === statusFilter;
 
-        return matchesSearch && matchesStatus;
+            return matchesSearch && matchesStatus;
 
-    });
+        })
+        .sort((a, b) => {
+
+            if (sortField === "") return 0;
+
+            return a[sortField]
+                .toString()
+                .localeCompare(b[sortField].toString());
+
+        });
 
     return (
         <div className="container mt-4">
@@ -132,7 +186,7 @@ function JobList() {
                                 <i className="bi bi-list-check me-2"></i>
                                 Total
                             </h5>
-                            <h2>{jobs.length}</h2>
+                            <h2>{allJobs.length}</h2>
                         </div>
                     </div>
                 </div>
@@ -144,7 +198,7 @@ function JobList() {
                                 Applied
                             </h5>
                             <h2>
-                                {jobs.filter(j => j.status === "Applied").length}
+                                {allJobs.filter(j => j.status === "Applied").length}
                             </h2>
                         </div>
                     </div>
@@ -158,7 +212,7 @@ function JobList() {
                                 Interview
                             </h5>
                             <h2>
-                                {jobs.filter(j => j.status === "Interview").length}
+                                {allJobs.filter(j => j.status === "Interview").length}
                             </h2>
                         </div>
                     </div>
@@ -172,7 +226,7 @@ function JobList() {
                                 Offer
                             </h5>
                             <h2>
-                                {jobs.filter(j => j.status === "Offer").length}
+                                {allJobs.filter(j => j.status === "Offer").length}
                             </h2>
                         </div>
                     </div>
@@ -186,16 +240,16 @@ function JobList() {
                                 Rejected
                             </h5>
                             <h2>
-                                {jobs.filter(j => j.status === "Rejected").length}
+                                {allJobs.filter(j => j.status === "Rejected").length}
                             </h2>
                         </div>
                     </div>
                 </div>
                 </div>
-                <StatusChart jobs={jobs} />
+                <StatusChart jobs={allJobs} />
                 <div className="row mb-4">
 
-                    <div className="col-md-6">
+                    <div className="col-md-4">
 
                         <input
                             className="form-control"
@@ -206,7 +260,7 @@ function JobList() {
 
                     </div>
 
-                    <div className="col-md-6">
+                    <div className="col-md-4">
 
                         <select
                             className="form-select"
@@ -222,9 +276,26 @@ function JobList() {
 
                         </select>
 
-                    </div>
+                        </div>
 
-                </div>
+                        <div className="col-md-4">
+
+                            <select
+                                className="form-select"
+                                value={sortField}
+                                onChange={(e) => setSortField(e.target.value)}
+                            >
+
+                                <option value="">Sort By</option>
+                                <option value="companyName">Company Name</option>
+                                <option value="role">Role</option>
+                                <option value="status">Status</option>
+
+                            </select>
+
+                        </div>
+
+                        </div>
 
                 <div className="card shadow mb-4">
 
@@ -357,6 +428,29 @@ function JobList() {
                 </tbody>
 
             </table>
+            <div className="d-flex justify-content-center align-items-center mt-4">
+
+                <button
+                    className="btn btn-outline-primary me-3"
+                    disabled={page === 0}
+                    onClick={() => setPage(page - 1)}
+                >
+                    ← Previous
+                </button>
+
+                <span className="fw-bold">
+                    Page {page + 1} of {totalPages}
+                </span>
+
+                <button
+                    className="btn btn-outline-primary ms-3"
+                    disabled={page === totalPages - 1}
+                    onClick={() => setPage(page + 1)}
+                >
+                    Next →
+                </button>
+
+            </div>
 
         </div>
     );

@@ -1,10 +1,40 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import JobList from "../components/JobList";
 
 function Home() {
+    const navigate = useNavigate();
+    const handleLogout = () => {
+
+        localStorage.removeItem("token");
+
+        navigate("/login");
+
+    };
+
+    useEffect(() => {
+
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            navigate("/login");
+        }
+
+    }, [navigate]);
 
     return (
 
         <div className="container mt-5">
+            <div className="d-flex justify-content-end mb-3">
+
+                        <button
+                            className="btn btn-danger"
+                            onClick={handleLogout}
+                        >
+                            Logout
+                        </button>
+
+                    </div>
 
             <h1 className="text-center fw-bold mb-4">
 

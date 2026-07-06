@@ -12,6 +12,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
+import com.shivangi.jobtracker.entity.User;
+import com.shivangi.jobtracker.repository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Service
 public class JobApplicationService {
@@ -19,15 +23,32 @@ public class JobApplicationService {
             LoggerFactory.getLogger(JobApplicationService.class);
 
     private final JobApplicationRepository repository;
+    private final UserRepository userRepository;
 
-    public JobApplicationService(JobApplicationRepository repository) {
+    public JobApplicationService(
+            JobApplicationRepository repository,
+            UserRepository userRepository) {
+
         this.repository = repository;
+        this.userRepository = userRepository;
     }
 
     public JobApplicationDTO saveJob(JobApplicationDTO dto) {
+
         logger.info("Saving job for company: {}", dto.getCompanyName());
 
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String email = authentication.getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
+
         JobApplication job = convertToEntity(dto);
+
+        job.setUser(user);
 
         JobApplication savedJob = repository.save(job);
 
@@ -35,8 +56,12 @@ public class JobApplicationService {
     }
 
     public List<JobApplication> getAllJobs() {
-        logger.info("Fetching all jobs");
-        return repository.findAll();
+
+        logger.info("Fetching jobs for current user");
+
+        User user = getCurrentUser();
+
+        return repository.findByUser(user);
     }
     public JobApplicationDTO getJobById(Long id) {
         JobApplication job = repository.findById(id)
@@ -45,22 +70,41 @@ public class JobApplicationService {
         return convertToDTO(job);
     }
     public void deleteJob(Long id) {
+
         logger.info("Deleting job with ID {}", id);
-        repository.deleteById(id);
-    }
-    public JobApplication updateJob(Long id, JobApplication updatedJob) {
-        JobApplication existingJob = repository.findById(id).orElse(null);
 
-        if (existingJob != null) {
-            existingJob.setCompanyName(updatedJob.getCompanyName());
-            existingJob.setRole(updatedJob.getRole());
-            existingJob.setStatus(updatedJob.getStatus());
-            existingJob.setDateApplied(updatedJob.getDateApplied());
+        User user = getCurrentUser();
 
-            return repository.save(existingJob);
+        JobApplication job = repository.findById(id)
+                .orElseThrow(() -> new JobNotFoundException(id));
+
+        if (!job.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Unauthorized");
         }
 
-        return null;
+        repository.delete(job);
+    }
+    public JobApplication updateJob(Long id, JobApplication updatedJob) {
+
+        User user = getCurrentUser();
+
+        JobApplication existingJob = repository.findById(id)
+                .orElse(null);
+
+        if (existingJob == null) {
+            return null;
+        }
+
+        if (!existingJob.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        existingJob.setCompanyName(updatedJob.getCompanyName());
+        existingJob.setRole(updatedJob.getRole());
+        existingJob.setStatus(updatedJob.getStatus());
+        existingJob.setDateApplied(updatedJob.getDateApplied());
+
+        return repository.save(existingJob);
     }
     public List<JobApplication> getJobsByCompany(String companyName) {
         return repository.findByCompanyName(companyName);
@@ -70,10 +114,39 @@ public class JobApplicationService {
         return repository.findByStatus(status);
     }
     public Page<JobApplication> getJobsPaginated(int page, int size) {
-        return repository.findAll(PageRequest.of(page, size));
+
+        User user = getCurrentUser();
+
+        return repository.findByUser(
+                user,
+                PageRequest.of(page, size)
+        );
     }
     public List<JobApplication> getJobsSorted(String field) {
-        return repository.findAll(Sort.by(field));
+
+        User user = getCurrentUser();
+
+        return repository.findByUser(user)
+                .stream()
+                .sorted((a, b) -> {
+
+                    switch (field) {
+
+                        case "companyName":
+                            return a.getCompanyName().compareToIgnoreCase(b.getCompanyName());
+
+                        case "role":
+                            return a.getRole().compareToIgnoreCase(b.getRole());
+
+                        case "status":
+                            return a.getStatus().compareToIgnoreCase(b.getStatus());
+
+                        default:
+                            return 0;
+                    }
+
+                })
+                .toList();
     }
     private JobApplicationDTO convertToDTO(JobApplication job) {
 
@@ -102,5 +175,16 @@ public class JobApplicationService {
         }
 
         return job;
+    }
+    private User getCurrentUser() {
+
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String email = authentication.getName();
+
+        return userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
     }
 }

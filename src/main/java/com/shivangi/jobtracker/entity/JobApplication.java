@@ -1,4 +1,5 @@
 package com.shivangi.jobtracker.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -60,5 +61,17 @@ public class JobApplication {
 
     public void setDateApplied(LocalDate dateApplied) {
         this.dateApplied = dateApplied;
+    }
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
